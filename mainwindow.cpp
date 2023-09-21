@@ -6,6 +6,10 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    setWindowTitle("");// This sets an empty application title, otherwise it will
+    //display "MainWindow"
+
+
 }
 
 MainWindow::~MainWindow()
