@@ -33,6 +33,8 @@ void MainWindow::digit_pressed()
     QString newLabel;
     //This appends the last number pressed to the current number
     labelNumber = (ui->label->text() + button->text()).toDouble();
-    newLabel = QString::number(labelNumber);
-    //ui->label->setText(newLabel);
+    //Casts double to a string since it is what will be displayed
+    newLabel = QString::number(labelNumber,'g',15);
+    //Displays the newLabel number as a string into the label field
+    ui->label->setText(newLabel);
 }
