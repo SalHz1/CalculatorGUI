@@ -27,5 +27,12 @@ MainWindow::~MainWindow()
 }
 void MainWindow::digit_pressed()
 {
-    qDebug() << "Test";
+
+    QPushButton * button = (QPushButton*)sender();
+    double labelNumber;
+    QString newLabel;
+    //This appends the last number pressed to the current number
+    labelNumber = (ui->label->text() + button->text()).toDouble();
+    newLabel = QString::number(labelNumber);
+    //ui->label->setText(newLabel);
 }
