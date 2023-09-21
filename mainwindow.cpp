@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-
+// Global variable
+double firstNum;
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -22,6 +23,17 @@ MainWindow::MainWindow(QWidget *parent)
     //Unary operators
     connect(ui->pushButtonplusMinus,SIGNAL(released() ),this,SLOT(unary_operation_pressed())  );
     connect(ui->pushButtonPercent,SIGNAL(released() ),this,SLOT(unary_operation_pressed())  );
+    //binary
+    connect(ui->pushButtonAdd,SIGNAL(released() ),this,SLOT(binary_operation_pressed())  );
+    connect(ui->pushButtonSubtract,SIGNAL(released() ),this,SLOT(binary_operation_pressed())  );
+    connect(ui->pushButtonMultiply,SIGNAL(released() ),this,SLOT(binary_operation_pressed())  );
+    connect(ui->pushButtonDivide,SIGNAL(released() ),this,SLOT(binary_operation_pressed())  );
+
+    ui->pushButtonAdd->setCheckable(true);
+    ui->pushButtonSubtract->setCheckable(true);
+    ui->pushButtonMultiply->setCheckable(true);
+    ui->pushButtonDivide->setCheckable(true);
+
 
 }
 
@@ -35,8 +47,18 @@ void MainWindow::digit_pressed()
     QPushButton * button = (QPushButton*)sender();
     double labelNumber;
     QString newLabel;
-    //This appends the last number pressed to the current number
-    labelNumber = (ui->label->text() + button->text()).toDouble();
+    if(ui->pushButtonAdd->isChecked() || ui->pushButtonDivide || ui->pushButtonMultiply || ui->pushButtonSubtract)
+    {
+        labelNumber = button->text().toDouble();
+
+    }
+    else
+    {
+        //This appends the last number pressed to the current number
+        labelNumber = (ui->label->text() + button->text()).toDouble();
+
+    }
+
     //Casts double to a string since it is what will be displayed
     newLabel = QString::number(labelNumber,'g',15);
     //Displays the newLabel number as a string into the label field
@@ -71,4 +93,55 @@ void MainWindow::unary_operation_pressed()
         ui->label->setText(newLabel);
     }
 
+}
+
+void MainWindow::on_pushButtonClear_released()
+{
+
+}
+
+
+void MainWindow::on_pushButtonEquals_released()
+{
+    double labelNumber,secondNumber;
+    QString newLabel;
+    secondNumber = ui->label->text().toDouble();
+    if(ui->pushButtonAdd->isChecked())
+    {
+        labelNumber = firstNum + secondNumber;
+        newLabel = QString::number(labelNumber,'g',15);
+        ui->label->setText(newLabel);
+        ui->pushButtonAdd->setChecked(false); // Adding operation completed so set to false
+
+    }
+    else if(ui->pushButtonSubtract->isChecked())
+    {
+        labelNumber = firstNum - secondNumber;
+        newLabel = QString::number(labelNumber,'g',15);
+        ui->label->setText(newLabel);
+        ui->pushButtonSubtract->setChecked(false);
+
+    }
+    else if(ui->pushButtonDivide->isChecked())
+    {
+        labelNumber = firstNum / secondNumber;
+        newLabel = QString::number(labelNumber,'g',15);
+        ui->label->setText(newLabel);
+        ui->pushButtonDivide->setChecked(false);
+
+    }
+    else if(ui->pushButtonMultiply->isChecked())
+    {
+        labelNumber = firstNum * secondNumber;
+        newLabel = QString::number(labelNumber,'g',15);
+        ui->label->setText(newLabel);
+        ui->pushButtonMultiply->setChecked(false);
+    }
+}
+
+void MainWindow::binary_operation_pressed()
+{
+    QPushButton * button = (QPushButton*)sender(); //get the button pressed
+    button->setChecked(true);// set whatever button is checked to true
+    firstNum = ui->label->text().toDouble();
 }
