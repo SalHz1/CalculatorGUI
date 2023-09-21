@@ -8,6 +8,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     setWindowTitle("");// This sets an empty application title, otherwise it will
     //display "MainWindow"
+    //Numbers
     connect(ui->pushButton_num0,SIGNAL(released() ),this,SLOT(digit_pressed() ) );
     connect(ui->pushButton_num1,SIGNAL(released() ),this,SLOT(digit_pressed() ) );
     connect(ui->pushButton_num2,SIGNAL(released() ),this,SLOT(digit_pressed() ) );
@@ -18,6 +19,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->pushButton_num7,SIGNAL(released() ),this,SLOT(digit_pressed() ) );
     connect(ui->pushButton_num8,SIGNAL(released() ),this,SLOT(digit_pressed() ) );
     connect(ui->pushButton_num9,SIGNAL(released() ),this,SLOT(digit_pressed() ) );
+    //Unary operators
+    connect(ui->pushButtonplusMinus,SIGNAL(released() ),this,SLOT(unary_operation_pressed())  );
 
 }
 
@@ -47,4 +50,17 @@ void MainWindow::on_pushButton_decimal_released()
 
     }
 }
+void MainWindow::unary_operation_pressed()
+{
+    QPushButton * button = (QPushButton*)sender();
+    double labelNumber;
+    QString newLabel;
+    if (button->text() == "+/-")
+    {
+        labelNumber = ui->label->text().toDouble();
+        labelNumber = labelNumber * -1;
+        newLabel = QString::number(labelNumber,'g',15);
+        //ui->label->setText(newLabel);
+    }
 
+}
