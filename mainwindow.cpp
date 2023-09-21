@@ -41,6 +41,10 @@ void MainWindow::digit_pressed()
 
 void MainWindow::on_pushButton_decimal_released()
 {
-    ui->label->setText(ui->label->text() + ".");
+    if( !ui->label->text().contains('.') )
+    {
+        ui->label->setText(ui->label->text() + ".");
+
+    }
 }
 
