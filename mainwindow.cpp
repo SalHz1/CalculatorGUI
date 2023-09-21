@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 // Global variable
 double firstNum;
+bool userIsTypingSecondNumber = false;
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -47,20 +48,31 @@ void MainWindow::digit_pressed()
     QPushButton * button = (QPushButton*)sender();
     double labelNumber;
     QString newLabel;
-    if(ui->pushButtonAdd->isChecked() || ui->pushButtonDivide || ui->pushButtonMultiply || ui->pushButtonSubtract)
+    if( ( ui->pushButtonAdd->isChecked()
+        || ui->pushButtonDivide->isChecked()
+        || ui->pushButtonMultiply->isChecked()
+        || ui->pushButtonSubtract->isChecked())
+                && (!userIsTypingSecondNumber) )
     {
         labelNumber = button->text().toDouble();
-
+        userIsTypingSecondNumber = true;
+        newLabel = QString::number(labelNumber,'g',15);
     }
     else
     {
+        if(ui->label->text().contains('.') && button->text() == "0")
+        {
+            newLabel = ui->label->text() + button->text();
+        }
+        else
+        {
+            labelNumber = (ui->label->text() + button->text() ).toDouble();
+            newLabel = QString::number(labelNumber,'g',15);
+
+        }
         //This appends the last number pressed to the current number
-        labelNumber = (ui->label->text() + button->text()).toDouble();
 
     }
-
-    //Casts double to a string since it is what will be displayed
-    newLabel = QString::number(labelNumber,'g',15);
     //Displays the newLabel number as a string into the label field
     ui->label->setText(newLabel);
 }
@@ -97,6 +109,12 @@ void MainWindow::unary_operation_pressed()
 
 void MainWindow::on_pushButtonClear_released()
 {
+    ui->pushButtonAdd->setChecked(false);
+    ui->pushButtonSubtract->setChecked(false);
+    ui->pushButtonMultiply->setChecked(false);
+    ui->pushButtonDivide->setChecked(false);
+    userIsTypingSecondNumber = false;
+    ui->label->setText("0");
 
 }
 
@@ -137,6 +155,9 @@ void MainWindow::on_pushButtonEquals_released()
         ui->label->setText(newLabel);
         ui->pushButtonMultiply->setChecked(false);
     }
+    //if a user presses the equals button he is not currently typing another number
+    userIsTypingSecondNumber = false;
+
 }
 
 void MainWindow::binary_operation_pressed()
