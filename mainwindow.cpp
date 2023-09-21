@@ -38,3 +38,9 @@ void MainWindow::digit_pressed()
     //Displays the newLabel number as a string into the label field
     ui->label->setText(newLabel);
 }
+
+void MainWindow::on_pushButton_decimal_released()
+{
+    ui->label->setText(ui->label->text() + ".");
+}
+
