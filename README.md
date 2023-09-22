@@ -9,5 +9,6 @@ This is a calculator program I created using QT Creator. The calculator serves t
 Features I implemented:
 Sep 22,2023 Backspace functionality, device numpad functionality
 Bugs fixed : Display going to 0 if backspace pressed when a single digit is displayed.
+Added functionality for operators via the keyboard.
 ![Image Alt Text](Screenshot%202023-09-21%20at%207.40.15%20PM.png)
 
