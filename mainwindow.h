@@ -27,6 +27,7 @@ private slots:
     void on_pushButtonClear_released();
     void backspace_pressed();
     void digit_pressed(const QString &);
+    void binary_operation_pressed(char);
 protected:
     void keyPressEvent(QKeyEvent *);
 
