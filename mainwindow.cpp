@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+
 // Global variable
 double firstNum;
 bool userIsTypingSecondNumber = false;
@@ -34,7 +35,9 @@ MainWindow::MainWindow(QWidget *parent)
     ui->pushButtonSubtract->setCheckable(true);
     ui->pushButtonMultiply->setCheckable(true);
     ui->pushButtonDivide->setCheckable(true);
-
+    setFocusPolicy(Qt::StrongFocus);
+    currentInput = "";
+    setFocus();
 
 }
 
@@ -48,6 +51,11 @@ void MainWindow::digit_pressed()
     QPushButton * button = (QPushButton*)sender();
     double labelNumber;
     QString newLabel;
+
+    //
+    currentInput = button->text();
+    labelNumber = currentInput.toDouble();
+    newLabel = QString::number(labelNumber,'g',15);
     if( ( ui->pushButtonAdd->isChecked()
         || ui->pushButtonDivide->isChecked()
         || ui->pushButtonMultiply->isChecked()
@@ -166,3 +174,24 @@ void MainWindow::binary_operation_pressed()
     button->setChecked(true);// set whatever button is checked to true
     firstNum = ui->label->text().toDouble();
 }
+
+void MainWindow::keyPressEvent(QKeyEvent *event)
+{
+    if (event->key() == Qt::Key_Backspace)
+    {
+        qDebug() << "Backspace pressed.";
+        backspace_pressed();
+    }
+}
+
+
+void MainWindow::backspace_pressed()
+{
+    QString currentText = ui->label->text();
+    if(!currentText.isEmpty() )
+    {
+        currentText.chop(1);
+        ui->label->setText(currentText);
+    }
+}
+
