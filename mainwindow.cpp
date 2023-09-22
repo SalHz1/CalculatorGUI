@@ -47,12 +47,11 @@ MainWindow::~MainWindow()
 }
 void MainWindow::digit_pressed()
 {
-
     QPushButton * button = (QPushButton*)sender();
     double labelNumber;
     QString newLabel;
 
-    //
+
     currentInput = button->text();
     labelNumber = currentInput.toDouble();
     newLabel = QString::number(labelNumber,'g',15);
@@ -79,7 +78,43 @@ void MainWindow::digit_pressed()
 
         }
         //This appends the last number pressed to the current number
+    }
+    //Displays the newLabel number as a string into the label field
+    ui->label->setText(newLabel);
+}
 
+void MainWindow::digit_pressed(const QString &digit)
+{
+    double labelNumber;
+    QString newLabel;
+    qDebug() << "A digit was pressed on the numpad so digit_pressed(const QString &) was called";
+    currentInput += digit;
+    labelNumber = currentInput.toDouble();
+    newLabel = QString::number(labelNumber,'g',15);
+
+    if( ( ui->pushButtonAdd->isChecked()
+         || ui->pushButtonDivide->isChecked()
+         || ui->pushButtonMultiply->isChecked()
+         || ui->pushButtonSubtract->isChecked())
+        && (!userIsTypingSecondNumber) )
+    {
+        labelNumber = digit.toDouble();
+        userIsTypingSecondNumber = true;
+        newLabel = QString::number(labelNumber,'g',15);
+    }
+    else
+    {
+        if(ui->label->text().contains('.') && digit == "0")
+        {
+            newLabel = ui->label->text() + digit;
+        }
+        else
+        {
+            labelNumber = (ui->label->text() + digit ).toDouble();
+            newLabel = QString::number(labelNumber,'g',15);
+
+        }
+        //This appends the last number pressed to the current number
     }
     //Displays the newLabel number as a string into the label field
     ui->label->setText(newLabel);
@@ -138,7 +173,7 @@ void MainWindow::on_pushButtonEquals_released()
         newLabel = QString::number(labelNumber,'g',15);
         ui->label->setText(newLabel);
         ui->pushButtonAdd->setChecked(false); // Adding operation completed so set to false
-
+        qDebug() << "Adding operation was completed";
     }
     else if(ui->pushButtonSubtract->isChecked())
     {
@@ -146,6 +181,7 @@ void MainWindow::on_pushButtonEquals_released()
         newLabel = QString::number(labelNumber,'g',15);
         ui->label->setText(newLabel);
         ui->pushButtonSubtract->setChecked(false);
+        qDebug() << "Subtraction operation was completed";
 
     }
     else if(ui->pushButtonDivide->isChecked())
@@ -154,6 +190,7 @@ void MainWindow::on_pushButtonEquals_released()
         newLabel = QString::number(labelNumber,'g',15);
         ui->label->setText(newLabel);
         ui->pushButtonDivide->setChecked(false);
+        qDebug() << "Divide operation was completed";
 
     }
     else if(ui->pushButtonMultiply->isChecked())
@@ -162,6 +199,8 @@ void MainWindow::on_pushButtonEquals_released()
         newLabel = QString::number(labelNumber,'g',15);
         ui->label->setText(newLabel);
         ui->pushButtonMultiply->setChecked(false);
+        qDebug() << "Multiply operation was completed";
+
     }
     //if a user presses the equals button he is not currently typing another number
     userIsTypingSecondNumber = false;
@@ -177,7 +216,17 @@ void MainWindow::binary_operation_pressed()
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
-    if (event->key() == Qt::Key_Backspace)
+    qDebug() << "in keyPressEvent";
+    //Checking if number is between 0-9
+    if(event->key() >= Qt::Key_0 && event->key() <= Qt::Key_9 )
+    {
+        qDebug() << "Checking number between 0-9";
+        QString digit = QString::number(event->key() - Qt::Key_0);
+        digit_pressed(digit);
+    }
+
+
+    else if (event->key() == Qt::Key_Backspace)
     {
         qDebug() << "Backspace pressed.";
         backspace_pressed();
@@ -188,10 +237,16 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 void MainWindow::backspace_pressed()
 {
     QString currentText = ui->label->text();
-    if(!currentText.isEmpty() )
+    if(!currentText.isEmpty() && currentText != "0" )
     {
         currentText.chop(1);
+        if(currentText.isEmpty())
+        {
+            currentText = "0";
+        }
         ui->label->setText(currentText);
+        qDebug() << "Backspace deletion completed.";
+
     }
 }
 
