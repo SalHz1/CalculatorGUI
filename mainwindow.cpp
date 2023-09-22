@@ -224,8 +224,26 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         QString digit = QString::number(event->key() - Qt::Key_0);
         digit_pressed(digit);
     }
-
-
+    else if (event->key() == Qt::Key_Minus)
+    {
+        qDebug() << "minus button pressed";
+    }
+    else if (event->key() == Qt::Key_Plus)
+    {
+        qDebug() << "plus button pressed";
+    }
+    else if (event->key() == Qt::Key_Asterisk)
+    {
+        qDebug() << "multiply button pressed";
+    }
+    else if(event->key() == Qt::Key_Equal)
+    {
+        qDebug() << "Equals button pressed";
+    }
+    else if(event->key() == Qt::Key_Percent)
+    {
+        qDebug() << "Percent button pressed";
+    }
     else if (event->key() == Qt::Key_Backspace)
     {
         qDebug() << "Backspace pressed.";
