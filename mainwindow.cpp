@@ -210,10 +210,50 @@ void MainWindow::on_pushButtonEquals_released()
 void MainWindow::binary_operation_pressed()
 {
     QPushButton * button = (QPushButton*)sender(); //get the button pressed
-    button->setChecked(true);// set whatever button is checked to true
-    firstNum = ui->label->text().toDouble();
+    //ensuring button is not null, otherwise will seg
+    if(button)
+    {
+        qDebug() << "Button was set to true";
+        button->setChecked(true);// set whatever button is checked to true
+        firstNum = ui->label->text().toDouble();
+    }
+    else
+    {
+        qDebug() << "Invalid sender button";
+    }
 }
+void MainWindow::binary_operation_pressed(char operation)
+{
+    switch(operation)
+    {
+    case '+':
+        ui->pushButtonAdd->click();
+        break;
+    case '-':
+        ui->pushButtonSubtract->click();
+        break;
+    case '/':
+        ui->pushButtonDivide->click();
+        break;
+    case '*':
+        ui->pushButtonMultiply->click();
+        break;
+   //Although % and decimal are not a binary operators i included just for sake of simplicity
 
+    case '%':
+        ui->pushButtonPercent->click();
+        break;
+    case '.':
+        ui->pushButton_decimal->click();
+        break;
+    case 'e': // case for escape
+        ui->pushButtonClear->click();
+    default:
+        qDebug() << "Invalid operation: " << operation;
+        break;
+    }
+}
+/*
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
     qDebug() << "in keyPressEvent";
@@ -227,27 +267,109 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
     else if (event->key() == Qt::Key_Minus)
     {
         qDebug() << "minus button pressed";
+        binary_operation_pressed('-');
     }
     else if (event->key() == Qt::Key_Plus)
     {
         qDebug() << "plus button pressed";
+        binary_operation_pressed('+');
     }
     else if (event->key() == Qt::Key_Asterisk)
     {
         qDebug() << "multiply button pressed";
+        binary_operation_pressed('*');
     }
-    else if(event->key() == Qt::Key_Equal)
+    else if(event->key() == Qt::Key_Equal || event->key() == Qt::Key_Return)
     {
         qDebug() << "Equals button pressed";
+        ui->pushButtonEquals->click();
     }
     else if(event->key() == Qt::Key_Percent)
     {
         qDebug() << "Percent button pressed";
+        binary_operation_pressed('%');
     }
     else if (event->key() == Qt::Key_Backspace)
     {
         qDebug() << "Backspace pressed.";
         backspace_pressed();
+    }
+}
+*/
+void MainWindow::keyPressEvent(QKeyEvent *event)
+{
+    qDebug() << "in keyPressEvent";
+
+    switch (event->key())
+    {
+    case Qt::Key_0:
+    case Qt::Key_1:
+    case Qt::Key_2:
+    case Qt::Key_3:
+    case Qt::Key_4:
+    case Qt::Key_5:
+    case Qt::Key_6:
+    case Qt::Key_7:
+    case Qt::Key_8:
+    case Qt::Key_9:
+    {
+        qDebug() << "Checking number between 0-9";
+        QString digit = QString::number(event->key() - Qt::Key_0);
+        digit_pressed(digit);
+        break;
+    }
+    case Qt::Key_Minus:
+    {
+        qDebug() << "minus button pressed";
+        binary_operation_pressed('-');
+        break;
+    }
+    case Qt::Key_Plus:
+    {
+        qDebug() << "plus button pressed";
+        binary_operation_pressed('+');
+        break;
+    }
+    case Qt::Key_Asterisk:
+    {
+        qDebug() << "multiply button pressed";
+        binary_operation_pressed('*');
+        break;
+    }
+    case Qt::Key_Equal:
+    case Qt::Key_Return:
+    {
+        qDebug() << "Equals button pressed";
+        ui->pushButtonEquals->click();
+        break;
+    }
+    case Qt::Key_Percent:
+    {
+        qDebug() << "Percent button pressed";
+        binary_operation_pressed('%');
+        break;
+    }
+    case Qt::Key_Backspace:
+    {
+        qDebug() << "Backspace pressed.";
+        backspace_pressed();
+        break;
+    }
+    case Qt::Key_division:
+    case Qt::Key_Slash:
+        qDebug() << "Division pressed";
+        binary_operation_pressed('/');
+        break;
+    case Qt::Key_Period:
+        qDebug()<< "Decimal Pressed";
+        binary_operation_pressed('.');
+        break;
+    case Qt::Key_Escape:
+        qDebug() << "Escape Pressed";
+        binary_operation_pressed('e');
+    default:
+        // Handle any other keys here if needed.
+        break;
     }
 }
 
