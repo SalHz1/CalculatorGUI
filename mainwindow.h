@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-
+#include <QKeyEvent>
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -17,6 +17,7 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    QString currentInput;
 private slots:
     void digit_pressed();
     void on_pushButton_decimal_released();
@@ -24,5 +25,10 @@ private slots:
     void binary_operation_pressed();
     void on_pushButtonEquals_released();
     void on_pushButtonClear_released();
+    void backspace_pressed();
+    void digit_pressed(const QString &);
+protected:
+    void keyPressEvent(QKeyEvent *);
+
  };
 #endif // MAINWINDOW_H
